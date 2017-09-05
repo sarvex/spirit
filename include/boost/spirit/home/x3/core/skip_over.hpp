@@ -31,6 +31,8 @@ namespace boost { namespace spirit { namespace x3
         Skipper const& skipper;
     };
 
+    struct expectation_failure_tag;
+
     namespace detail
     {
         template <typename Skipper>
@@ -62,7 +64,8 @@ namespace boost { namespace spirit { namespace x3
         inline void skip_over(
             Iterator& first, Iterator const& last, Skipper const& skipper)
         {
-            while (first != last && skipper.parse(first, last, unused, unused, unused))
+            bool failure = false;
+            while (first != last && skipper.parse(first, last, make_context<expectation_failure_tag>(failure), unused, unused))
                 /***/;
         }
 
